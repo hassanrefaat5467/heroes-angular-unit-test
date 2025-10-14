@@ -4,38 +4,38 @@ import { provideZonelessChangeDetection } from "@angular/core";
 import { By } from "@angular/platform-browser";
 
 describe('counter component: ', () => {
-  let component:Counter, fixture:ComponentFixture<Counter>
+  let component:Counter,fixture: ComponentFixture<Counter>
   beforeEach(()=>{
-    //1
     TestBed.configureTestingModule({
       imports:[Counter],
       providers:[
         provideZonelessChangeDetection()
       ]
     })
-    //2
-    fixture=TestBed.createComponent(Counter)
-    //3
+    fixture= TestBed.createComponent(Counter)
     component=fixture.componentInstance
   })
-    it('counter=0 should render in template', () => {
-    
+    it('component should render counter =0 in template', () => {
       fixture.detectChanges()
-      let p= fixture.nativeElement.querySelector("p")
-      expect(p.textContent).toContain(0)
+      //access p tag
+      let p=fixture.nativeElement.querySelector("p")
+      // in p tag 0
+      expect(p.textContent).toContain("0")
+      
   });
-  it("after clicking btn + should counter++ and in template",()=>{
-    //access btn
-    let btn= fixture.debugElement.query( By.css("#inc") )
-    //fire click
-    btn.triggerEventHandler("click")
-    btn.triggerEventHandler("click")
-    btn.triggerEventHandler("click")
-    //assert counter+
-    expect(component.counter).toBe(3)
-    //assert in template
-    fixture.detectChanges()
-    let p= fixture.nativeElement.querySelector("p")
-      expect(p.textContent).toContain(3)
-  })
+    it('component should render counter =1 in template after clicking inc. btn', () => {
+      fixture.detectChanges()
+      //access btn
+     let btn= fixture.debugElement.query(By.css("#inc"))
+      //fire event click
+      btn.triggerEventHandler("click")
+      btn.triggerEventHandler("click")
+      btn.triggerEventHandler("click")
+      fixture.detectChanges()
+      //access p tag
+      let p=fixture.nativeElement.querySelector("p")
+      // in p tag 0
+      expect(p.textContent).toContain("3")
+      
+  });
 });

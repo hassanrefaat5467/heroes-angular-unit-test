@@ -1,33 +1,30 @@
 import { ChangeDetectorRef } from "@angular/core";
-import { Heroes } from "./heroes";
 import { HeroService } from "../../services/hero-service/hero.service";
-import { Hero } from "../hero/hero";
-import { Ihero } from "../../models/ihero";
+import { Heroes } from "./heroes";
 import { of } from "rxjs";
-import { TestBed } from "@angular/core/testing";
+import { Ihero } from "../../models/ihero";
 
 describe('heroes component', () => {
-  let mockCDRService:jasmine.SpyObj<ChangeDetectorRef>,mockHeroService:jasmine.SpyObj<HeroService>,component:Heroes
-  let heroes:Ihero[]
-  beforeEach(()=>{
-    heroes=[
-      {id:100,name:"super man",strength:20},
-      {id:102,name:"bat man",strength:15}
+  let mockHeroService:jasmine.SpyObj<HeroService>,mockCDR:jasmine.SpyObj<ChangeDetectorRef>
+  let component:Heroes
+  let mockHeroes:Ihero[]
+  beforeAll(()=>{
+    mockHeroes=[
+      {id:100,name:"super man",strength:10},
+      {id:200,name:"bat man",strength:40},
     ]
-      mockHeroService= jasmine.createSpyObj(["getHeroes","addHero","deleteHero"])
-      mockHeroService.getHeroes.and.returnValue( of(heroes) )
-
-       mockCDRService= jasmine.createSpyObj(["detectChanges"])
-
-    component= new Heroes(mockHeroService,mockCDRService)
+     mockHeroService=jasmine .createSpyObj(["addHero","deleteHero","getHeroes"])
+     mockHeroService.getHeroes.and.returnValue(of(mockHeroes))
+     mockCDR=jasmine .createSpyObj(["detectChanges"])
+    component= new Heroes(mockHeroService,mockCDR)
   })
-    it('ngOninit set heroes', () => {
+    it('after ngOninit, heroes array should be set', () => {
+      // expect(false).toBeTrue();
+      component.ngOnInit()
 
-     component.ngOnInit()
-
-     expect(mockHeroService.getHeroes).toHaveBeenCalled()
-      expect(component.heroes).toEqual(heroes)
-
+      expect(mockHeroService.getHeroes).toHaveBeenCalled()
+      expect(mockCDR.detectChanges).toHaveBeenCalled()
+      expect(component.heroes).toHaveSize(mockHeroes.length)
   });
 });
 

@@ -25,7 +25,8 @@ export class HeroServiceForLab {
   
   /** PUT: update the hero on the server */
   updateHero (hero: Ihero): Observable<any> {
-    return this.http.put(this.heroesUrl, hero, httpOptions)
+    const url = `${this.heroesUrl}/${hero.id}`;
+    return this.http.put<Ihero>(url, hero, httpOptions);
   }
   
 

@@ -9,31 +9,41 @@ import { HeroService } from './hero.service';
 import { provideZonelessChangeDetection } from '@angular/core';
 
 describe('hero service:', () => {
-  let mockMsgService: jasmine.SpyObj<MessageService>;
-  let service:HeroService,httpTesting:HttpTestingController
+  let messageServiceMock: MessageService;
+  let httpTesting:HttpTestingController
+  let service:HeroService
   let heroesUrl = 'http://localhost:3000/heroes'
   beforeEach(() => {
-    mockMsgService = jasmine.createSpyObj(['add']);
+    messageServiceMock = jasmine.createSpyObj(['add']);
+    //1
     TestBed.configureTestingModule({
       providers: [
-        { provide: MessageService, useValue: mockMsgService },
+        // ... other test providers
         provideHttpClient(),
         provideHttpClientTesting(),
+        {provide:MessageService,useValue:messageServiceMock},
         provideZonelessChangeDetection()
       ],
     });
-     httpTesting = TestBed.inject(HttpTestingController);
+    //2
+    httpTesting = TestBed.inject(HttpTestingController);
+    //3
     service=TestBed.inject(HeroService)
   });
-  it('getHero function: send get request to API and take res', () => {
-    let mockRes={name:"Soah",id:23,strength:20}
-    service.getHero(23).subscribe({next:(data)=>{
-      expect(data).toEqual(mockRes)
+  it('getHero: should send request correctly then put response in observable', () => {
+    
+    
+    service.getHero(10).subscribe({next:(data)=>{
+      expect(data.name).toBe("bat man")
     }})
 
-   let testReq = httpTesting.expectOne(heroesUrl+"/23")
-   expect(testReq.request.method).toBe("GET")
+    let testReq=httpTesting.expectOne(heroesUrl+'/10')
+    expect(testReq.request.method).toBe("GET")
 
-   testReq.flush(mockRes)
+    testReq.flush({id:10,name:"bat man",strength:20})
   });
+  afterEach(() => {
+  // Verify that none of the tests make any extra HTTP requests.
+  httpTesting.verify();
+});
 });

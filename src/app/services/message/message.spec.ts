@@ -1,17 +1,21 @@
 import { MessageService } from "./message.service";
 
-describe("message service:",()=>{
-    it('add function:should add new msg', () => {
-      let service=new MessageService()
-      service.add("message 1")
-    expect(service.messages).toHaveSize(1);
+describe('message service:', () => {
+  let service:MessageService
+  beforeEach(()=>{
+    service= new MessageService()
+  })
+  it('add: should add new message to messages', () => {
+    service.add("message 1")
+    service.add("message 2")
+    expect(service.messages).toHaveSize(2)
   });
-    it('clear function:should remove all message form array', () => {
-      let service=new MessageService()
-      service.add("message 1")
-      service.add("message 2")
+  it('clear: should remove all messages', () => {
+    service.add("test message 1 ")
+    service.add("test message 2 ")
 
-      service.clear()
-    expect(service.messages).toHaveSize(0);
+    service.clear()
+
+    expect(service.messages).toHaveSize(0)
   });
-})
+});
